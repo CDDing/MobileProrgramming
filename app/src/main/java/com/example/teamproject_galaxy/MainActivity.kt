@@ -18,7 +18,8 @@ class MainActivity : AppCompatActivity() {
     val scope= CoroutineScope(Dispatchers.IO)
     lateinit var adapter:SubwayAdapter
     val api_key:String="74795954496a616e35354745524177"
-    val RequestSubwayData:String="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/1호선"
+    val subwayName:String="2호선"
+    val RequestSubwayData:String="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/"+subwayName
     lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         binding= ActivityMainBinding.inflate(layoutInflater)
@@ -37,10 +38,19 @@ class MainActivity : AppCompatActivity() {
             Log.i("확인-지하철개수",RealTimeArray.length().toString())
             for(i in 0..RealTimeArray.length()-1){
                 var subwayNm=RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
-                var statnNm=RealTimeArray.getJSONObject(i).getString("statnTnm").toString()
+                var statnNm=RealTimeArray.getJSONObject(i).getString("statnNm").toString()
                 var direction=RealTimeArray.getJSONObject(i).getString("updnLine").toInt()
                 var LastSubway=RealTimeArray.getJSONObject(i).getString("lstcarAt").toBoolean()
-                adapter.items.add(Subway(subwayNm,statnNm, direction, LastSubway))
+                var trainSttus=RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
+                var trainStatus:String
+                if(trainSttus==0){
+                    trainStatus="진입"
+                }else if (trainSttus==1){
+                    trainStatus="도착"
+                }else{
+                    trainStatus="출발"
+                }
+                adapter.items.add(Subway(subwayNm,statnNm, direction, LastSubway,trainStatus))
             }
             withContext(Dispatchers.Main){
                 adapter.notifyDataSetChanged()

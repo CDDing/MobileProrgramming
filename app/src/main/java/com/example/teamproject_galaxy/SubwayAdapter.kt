@@ -28,9 +28,7 @@ class SubwayAdapter(val items:ArrayList<Subway>): RecyclerView.Adapter<SubwayAda
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.binding.textView.text=items[position].subwayNm
-        holder.binding.textView2.text=items[position].location
-        holder.binding.textView2.text=items[position].direction.toString()
-        holder.binding.textView2.text=items[position].LastSubway.toString()
+        holder.binding.textView.text=items[position].subwayNm+items[position].location+items[position].direction.toString()+
+                items[position].LastSubway.toString()+items[position].trainStatus
     }
 }
