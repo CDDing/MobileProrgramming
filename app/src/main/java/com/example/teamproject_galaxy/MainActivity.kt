@@ -204,9 +204,7 @@ class MainActivity : AppCompatActivity() {
                     googleMap.clear()
                     coordinates.clear()
                     when(position){
-
                         0->{
-
                             val scanText= Scanner(resources.openRawResource(R.raw.line1))
                             readTextFile(99,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
