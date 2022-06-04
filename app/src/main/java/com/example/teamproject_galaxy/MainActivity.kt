@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getLiveStn() {
-        scope.launch {
+        /*scope.launch {
             subwayName="1호선"
             val doc= Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
             val json=JSONObject(doc.text())
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main){
 
             }
-        }
+        }*/
     }
 
     private fun initmap(markIcon: BitmapDescriptor){  //coordinates:ArrayList<LatLng>
