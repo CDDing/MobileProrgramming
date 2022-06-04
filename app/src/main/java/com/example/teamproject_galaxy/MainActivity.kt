@@ -200,76 +200,56 @@ class MainActivity : AppCompatActivity() {
             spinner.setSelection(1)
             spinner.onItemSelectedListener=object: AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    stn.clear()
+                    googleMap.clear()
+                    coordinates.clear()
                     when(position){
+
                         0->{
-                            stn.clear()
-                            googleMap.clear()
-                            coordinates.clear()
+
                             val scanText= Scanner(resources.openRawResource(R.raw.line1))
                             readTextFile(99,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                         }
                         1->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
                             val scanText= Scanner(resources.openRawResource(R.raw.line2))
                             readTextFile(51,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         }
                         2->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
+
                             val scanText= Scanner(resources.openRawResource(R.raw.line3))
                             readTextFile(44,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                         }
                         3->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
+
                             val scanText= Scanner(resources.openRawResource(R.raw.line4))
                             readTextFile(50,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))
                         }
                         4->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
+
                             val scanText= Scanner(resources.openRawResource(R.raw.line5))
                             readTextFile(49,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
                         }
                         5->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
                             val scanText= Scanner(resources.openRawResource(R.raw.line6))
                             readTextFile(39,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW))
                         }
                         6->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
-
                             val scanText= Scanner(resources.openRawResource(R.raw.line7))
                             readTextFile(53,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                         }
                         7->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
                             val scanText= Scanner(resources.openRawResource(R.raw.line8))
                             readTextFile(18,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
                         }
                         8->{
-                            stn.clear()
-                            coordinates.clear()
-                            googleMap.clear()
                             val scanText= Scanner(resources.openRawResource(R.raw.line9))
                             readTextFile(38,scanText)
                             initmap(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
