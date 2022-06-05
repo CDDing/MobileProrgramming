@@ -1,9 +1,13 @@
 package com.example.teamproject_galaxy
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.teamproject_galaxy.databinding.RowBinding
+import kotlinx.coroutines.*
+import org.json.JSONObject
+import org.jsoup.Jsoup
 
 class SubwayAdapter(val items:ArrayList<Subway>): RecyclerView.Adapter<SubwayAdapter.MyViewHolder>() {
     interface OnItemClickListener{

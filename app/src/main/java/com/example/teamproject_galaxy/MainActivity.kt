@@ -1,24 +1,17 @@
 package com.example.teamproject_galaxy
 
-import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.location.LocationManager
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.Toast
 import com.example.teamproject_galaxy.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -30,7 +23,6 @@ import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import org.jsoup.Jsoup
-import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -162,16 +154,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun initmap(colour:Float){  //coordinates:ArrayList<LatLng>
         getLiveStn()
+        val imageBitmap:Bitmap= BitmapFactory.decodeResource(resources,resources.getIdentifier("subway","drawable",packageName))
+        val BitmapIcon=Bitmap.createScaledBitmap(imageBitmap,100,100,false)
         val mapFragment=supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync{
-            googleMap=it
+        mapFragment.getMapAsync {
+            googleMap = it
             googleMap.setMinZoomPreference(10.0f)
             googleMap.setMaxZoomPreference(18.0f)
-
             //Marker:
-            if(setMarker) {
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates[0],16.0f))
+            if (setMarker) {
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates[0], 16.0f))
                 for (cor in coordinates) {
                     val option = MarkerOptions()
                     option.position(cor)
@@ -183,15 +176,16 @@ class MainActivity : AppCompatActivity() {
                     //option2.snippet("서울역")
                     googleMap.addMarker(option)?.showInfoWindow()
                 }
-                for(subway in liveStn){
-                    val sub_option=MarkerOptions()
-                    val position=stn_location.getValue(subway.location)
+                for (subway in liveStn) {
+                    val sub_option = MarkerOptions()
+                    val position = stn_location.getValue(subway.location)
                     sub_option.position(position)
                     sub_option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     sub_option.title("실시간 위치")
+                    sub_option.icon(BitmapDescriptorFactory.fromBitmap(BitmapIcon))
                     googleMap.addMarker(sub_option)?.showInfoWindow()
                 }
-                when(subwayName) {
+                when (subwayName) {
                     // 1호선
                     "1호선" -> {
                         val polylineOptions = PolylineOptions().color(Color.BLUE)
@@ -200,18 +194,18 @@ class MainActivity : AppCompatActivity() {
                         }
                         googleMap.addPolyline(polylineOptions)
                         polylineOptions.add(coordinates[23])
-                        for(i in 25..38) {
+                        for (i in 25..38) {
                             polylineOptions.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions)
                         polylineOptions.add(coordinates[37])
-                        for(i in 39..57) {
+                        for (i in 39..57) {
                             polylineOptions.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions)
                         val polylineOptions2 = PolylineOptions().color(Color.BLUE)
                         polylineOptions2.add(coordinates[20])
-                        for(i in 58..98) {
+                        for (i in 58..98) {
                             polylineOptions2.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions2)
@@ -224,23 +218,23 @@ class MainActivity : AppCompatActivity() {
                         }
                         googleMap.addPolyline(polylineOptions)
                         val polylineOptions2 = PolylineOptions().color(Color.GREEN)
-                        for(i in 27..31) {
+                        for (i in 27..31) {
                             polylineOptions2.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions2)
                         val polygonOptions = PolygonOptions().strokeColor(Color.GREEN)
-                        for(i in 4..27) {
+                        for (i in 4..27) {
                             polygonOptions.add(coordinates[i])
                         }
-                        for(i in 32..50) {
+                        for (i in 32..50) {
                             polygonOptions.add(coordinates[i])
                         }
                         googleMap.addPolygon(polygonOptions)
                     }
                     // 3호선
                     "3호선" -> {
-                        val polylineOptions = PolylineOptions().color(Color.rgb(255,165,0))
-                        for(cor in coordinates) {
+                        val polylineOptions = PolylineOptions().color(Color.rgb(255, 165, 0))
+                        for (cor in coordinates) {
                             polylineOptions.add(cor)
                         }
                         googleMap.addPolyline(polylineOptions)
@@ -248,7 +242,7 @@ class MainActivity : AppCompatActivity() {
                     // 4호선
                     "4호선" -> {
                         val polylineOptions = PolylineOptions().color(Color.CYAN)
-                        for(cor in coordinates) {
+                        for (cor in coordinates) {
                             polylineOptions.add(cor)
                         }
                         googleMap.addPolyline(polylineOptions)
@@ -256,13 +250,13 @@ class MainActivity : AppCompatActivity() {
                     // 5호선
                     "5호선" -> {
                         val polylineOptions = PolylineOptions().color(Color.rgb(138, 43, 226))
-                        for(i in 0..48) {
+                        for (i in 0..48) {
                             polylineOptions.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions)
                         val polylineOptions2 = PolylineOptions().color(Color.rgb(138, 43, 226))
                         polylineOptions2.add(coordinates[38])
-                        for(i in 49..55) {
+                        for (i in 49..55) {
                             polylineOptions2.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions2)
@@ -270,12 +264,12 @@ class MainActivity : AppCompatActivity() {
                     // 6호선
                     "6호선" -> {
                         val polygonOptions = PolygonOptions().strokeColor(Color.rgb(205, 124, 47))
-                        for(i in 0..5) {
+                        for (i in 0..5) {
                             polygonOptions.add(coordinates[i])
                         }
                         googleMap.addPolygon(polygonOptions)
                         val polylineOptions = PolylineOptions().color(Color.rgb(205, 124, 47))
-                        for(i in 5..38) {
+                        for (i in 5..38) {
                             polylineOptions.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions)
@@ -283,15 +277,15 @@ class MainActivity : AppCompatActivity() {
                     // 7호선
                     "7호선" -> {
                         val polylineOptions = PolylineOptions().color(Color.YELLOW)
-                        for(cor in coordinates) {
+                        for (cor in coordinates) {
                             polylineOptions.add(cor)
                         }
                         val polyline = googleMap.addPolyline(polylineOptions)
                     }
                     // 8호선
                     "8호선" -> {
-                        val polylineOptions = PolylineOptions().color(Color.rgb(255,0, 127))
-                        for(cor in coordinates) {
+                        val polylineOptions = PolylineOptions().color(Color.rgb(255, 0, 127))
+                        for (cor in coordinates) {
                             polylineOptions.add(cor)
                         }
                         val polyline = googleMap.addPolyline(polylineOptions)
@@ -299,14 +293,21 @@ class MainActivity : AppCompatActivity() {
                     // 9호선
                     "9호선" -> {
                         val polylineOptions = PolylineOptions().color(Color.RED)
-                        for(cor in coordinates) {
+                        for (cor in coordinates) {
                             polylineOptions.add(cor)
                         }
                         val polyline = googleMap.addPolyline(polylineOptions)
                     }
                 }
-            }else
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,16.0f))
+            } else
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f))
+
+            googleMap.setOnMarkerClickListener(object:GoogleMap.OnMarkerClickListener{
+                override fun onMarkerClick(p0: Marker): Boolean {
+                    Toast.makeText(this@MainActivity,p0.title.toString(),Toast.LENGTH_SHORT).show()
+                    return false
+                }
+            })
         }
     }
 
