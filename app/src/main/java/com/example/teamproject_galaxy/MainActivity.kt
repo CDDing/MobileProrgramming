@@ -37,7 +37,7 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity() {
     lateinit var googleMap: GoogleMap
     lateinit var binding: ActivityMainBinding
-    lateinit var adapter:SubwayAdapter
+    lateinit var adapter: SubwayAdapter
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
     lateinit var locationRequest2:LocationRequest
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     var subwayName:String="1호선"
     var startupdate=false
-
+    var stn_location= mutableMapOf<String,LatLng>()
     var liveStn=ArrayList<Subway>()
 
     val api_key:String="74795954496a616e35354745524177"
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initLayout() {
         binding.button.setOnClickListener {
-            val intent= Intent(this,SettingActivity::class.java)
+            val intent= Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
     }
@@ -123,7 +123,6 @@ class MainActivity : AppCompatActivity() {
     private fun getLiveStn() {
         val Job=scope.launch {
             var subarray = ArrayList<Subway>()
-            subwayName = "1호선"
             val doc = Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
             val json = JSONObject(doc.text())
             Log.i("확인", json.toString());
@@ -161,7 +160,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initmap(colour:Float){  //coordinates:ArrayList<LatLng>
-
+        getLiveStn()
         val mapFragment=supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync{
@@ -183,6 +182,14 @@ class MainActivity : AppCompatActivity() {
                     //option2.snippet("서울역")
                     googleMap.addMarker(option)?.showInfoWindow()
                 }
+                for(subway in liveStn){
+                    val sub_option=MarkerOptions()
+                    val position=stn_location.getValue(subway.location)
+                    sub_option.position(position)
+                    sub_option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                    sub_option.title("실시간 위치")
+                    googleMap.addMarker(sub_option)?.showInfoWindow()
+                }
                 val option3 = PolylineOptions().color(Color.DKGRAY).addAll(coordinates)
                 googleMap.addPolyline(option3)
             }else
@@ -200,6 +207,7 @@ class MainActivity : AppCompatActivity() {
             val double2: Double = info[1].toDouble()
             val locate = LatLng(double1, double2)
             locArray.add(locate)
+            stn_location.put(info[2],locate)
             stnArray.add(info[2])
             if(counting==counts)dones=false
             else counting++
@@ -261,46 +269,55 @@ class MainActivity : AppCompatActivity() {
                     stn.clear()
                     when(position){
                         0->{
+                            subwayName="1호선"
                             coordinates=coordinates1
                             stn=stn1
                             initmap(BitmapDescriptorFactory.HUE_BLUE)
                         }
                         1->{
+                            subwayName="2호선"
                             coordinates=coordinates2
                             stn=stn2
                             initmap(BitmapDescriptorFactory.HUE_GREEN)
                         }
                         2->{
+                            subwayName="3호선"
                             coordinates=coordinates3
                             stn=stn3
                             initmap(BitmapDescriptorFactory.HUE_ORANGE)
                         }
                         3->{
+                            subwayName="4호선"
                             coordinates=coordinates4
                             stn=stn4
                             initmap(BitmapDescriptorFactory.HUE_CYAN)
                         }
                         4->{
+                            subwayName="5호선"
                             coordinates=coordinates5
                             stn=stn5
                             initmap(BitmapDescriptorFactory.HUE_VIOLET)
                         }
                         5->{
+                            subwayName="6호선"
                             coordinates=coordinates6
                             stn=stn6
                             initmap(BitmapDescriptorFactory.HUE_YELLOW)
                         }
                         6->{
+                            subwayName="7호선"
                             coordinates=coordinates7
                             stn=stn7
                             initmap(BitmapDescriptorFactory.HUE_MAGENTA)
                         }
                         7->{
+                            subwayName="8호선"
                             coordinates=coordinates8
                             stn=stn8
                             initmap(BitmapDescriptorFactory.HUE_ROSE)
                         }
                         8->{
+                            subwayName="9호선"
                             coordinates=coordinates9
                             stn=stn9
                             initmap(BitmapDescriptorFactory.HUE_RED)
