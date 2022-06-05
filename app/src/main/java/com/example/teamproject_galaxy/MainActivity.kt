@@ -27,10 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.net.URL
@@ -54,12 +51,12 @@ class MainActivity : AppCompatActivity() {
 
     var subwayName:String="1호선"
     var startupdate=false
+
     var liveStn=ArrayList<Subway>()
 
     val api_key:String="74795954496a616e35354745524177"
     val scope= CoroutineScope(Dispatchers.IO)
     val RequestSubwayData:String="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/"+subwayName
-
     var coordinates1=ArrayList<LatLng>()
     var stn1=ArrayList<String>()
     var coordinates2=ArrayList<LatLng>()
@@ -88,8 +85,6 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getLiveStn()
-        Log.i("확인","1111"+liveStn.toString())
-
         initLayout()
         saveArray()
         initmap(BitmapDescriptorFactory.HUE_GREEN)
@@ -126,20 +121,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getLiveStn() {
-        scope.launch {
-            subwayName="1호선"
-            val doc= Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
-            val json=JSONObject(doc.text())
-            Log.i("확인",json.toString());
-            if(json.getJSONObject("errorMessage").getInt("status")==200) {
+        val Job=scope.launch {
+            var subarray = ArrayList<Subway>()
+            subwayName = "1호선"
+            val doc = Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
+            val json = JSONObject(doc.text())
+            Log.i("확인", json.toString());
+            if (json.getJSONObject("errorMessage").getInt("status") == 200) {
                 val RealTimeArray = json.getJSONArray("realtimePositionList")
+                //Log.i("확인",RealTimeArray.length().toString())
                 for (i in 0..RealTimeArray.length() - 1) {
-                    var subwayNm = RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
+                    var subwayNm =RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
                     var statnNm = RealTimeArray.getJSONObject(i).getString("statnNm").toString()
                     var direction = RealTimeArray.getJSONObject(i).getString("updnLine").toInt()
                     var LastSubway =
                         RealTimeArray.getJSONObject(i).getString("lstcarAt").toBoolean()
-                    var trainSttus = RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
+                    var trainSttus =
+                        RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
                     var trainStatus: String
                     if (trainSttus == 0) {
                         trainStatus = "진입"
@@ -148,14 +146,18 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         trainStatus = "출발"
                     }
-                    liveStn.add(Subway(subwayNm, statnNm, direction, LastSubway, trainStatus))
+                    subarray.add(Subway(subwayNm, statnNm, direction, LastSubway, trainStatus))
                 }
             }
-            Log.i("확인",liveStn.toString())
-            withContext(Dispatchers.Main){
-
+            withContext(Dispatchers.Default) {
+                liveStn = subarray
             }
         }
+        runBlocking {
+            Job.join()
+        }
+        Log.i("확인-지하철 개수",liveStn.size.toString())
+        Log.i("확인", liveStn.toString())
     }
 
     private fun initmap(colour:Float){  //coordinates:ArrayList<LatLng>
