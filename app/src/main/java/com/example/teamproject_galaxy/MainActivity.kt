@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     val api_key:String="74795954496a616e35354745524177"
     val scope= CoroutineScope(Dispatchers.IO)
-    val RequestSubwayData:String="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/"+subwayName
+    var RequestSubwayData:String="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/"+subwayName
     var coordinates1=ArrayList<LatLng>()
     var stn1=ArrayList<String>()
     var coordinates2=ArrayList<LatLng>()
@@ -121,11 +121,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getLiveStn() {
+        RequestSubwayData="http://swopenapi.seoul.go.kr/api/subway/"+api_key+"/json/realtimePosition/0/999/"+subwayName
         val Job=scope.launch {
             var subarray = ArrayList<Subway>()
             val doc = Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
             val json = JSONObject(doc.text())
-            Log.i("확인", json.toString());
+            //Log.i("확인", json.toString());
             if (json.getJSONObject("errorMessage").getInt("status") == 200) {
                 val RealTimeArray = json.getJSONArray("realtimePositionList")
                 //Log.i("확인",RealTimeArray.length().toString())
@@ -155,7 +156,7 @@ class MainActivity : AppCompatActivity() {
         runBlocking {
             Job.join()
         }
-        Log.i("확인-지하철 개수",liveStn.size.toString())
+        //.i("확인-지하철 개수",liveStn.size.toString())
         Log.i("확인", liveStn.toString())
     }
 
@@ -213,38 +214,6 @@ class MainActivity : AppCompatActivity() {
             else counting++
         }
     }
-
-    fun init(){
-        //initAdapter()
-        scope.launch {
-            adapter.items.clear()
-            val doc= Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
-            val json=JSONObject(doc.text())
-            val RealTimeArray=json.getJSONArray("realtimePositionList")
-            Log.i("확인",RealTimeArray.getJSONObject(1).toString())
-            Log.i("확인-지하철개수",RealTimeArray.length().toString())
-            for(i in 0..RealTimeArray.length()-1){
-                var subwayNm=RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
-                var statnNm=RealTimeArray.getJSONObject(i).getString("statnNm").toString()
-                var direction=RealTimeArray.getJSONObject(i).getString("updnLine").toInt()
-                var LastSubway=RealTimeArray.getJSONObject(i).getString("lstcarAt").toBoolean()
-                var trainSttus=RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
-                var trainStatus:String
-                if(trainSttus==0){
-                    trainStatus="진입"
-                }else if (trainSttus==1){
-                    trainStatus="도착"
-                }else{
-                    trainStatus="출발"
-                }
-                adapter.items.add(Subway(subwayNm,statnNm, direction, LastSubway,trainStatus))
-            }
-            withContext(Dispatchers.Main){
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
-
     private fun initSpinner() {
         val adapter=ArrayAdapter<String>(this,
             android.R.layout.simple_spinner_dropdown_item,ArrayList<String>())
