@@ -75,31 +75,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getLiveStn() {
-        /*scope.launch {
+        scope.launch {
             subwayName="1호선"
             val doc= Jsoup.connect(RequestSubwayData).ignoreContentType(true).get()
             val json=JSONObject(doc.text())
-            val RealTimeArray=json.getJSONArray("realtimePositionList")
-            for(i in 0..RealTimeArray.length()-1){
-                var subwayNm=RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
-                var statnNm=RealTimeArray.getJSONObject(i).getString("statnNm").toString()
-                var direction=RealTimeArray.getJSONObject(i).getString("updnLine").toInt()
-                var LastSubway=RealTimeArray.getJSONObject(i).getString("lstcarAt").toBoolean()
-                var trainSttus=RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
-                var trainStatus:String
-                if(trainSttus==0){
-                    trainStatus="진입"
-                }else if (trainSttus==1){
-                    trainStatus="도착"
-                }else{
-                    trainStatus="출발"
+            Log.i("확인",json.toString());
+            if(json.getJSONObject("errorMessage").getInt("status")==200) {
+                val RealTimeArray = json.getJSONArray("realtimePositionList")
+                for (i in 0..RealTimeArray.length() - 1) {
+                    var subwayNm = RealTimeArray.getJSONObject(i).getString("subwayNm").toString()
+                    var statnNm = RealTimeArray.getJSONObject(i).getString("statnNm").toString()
+                    var direction = RealTimeArray.getJSONObject(i).getString("updnLine").toInt()
+                    var LastSubway =
+                        RealTimeArray.getJSONObject(i).getString("lstcarAt").toBoolean()
+                    var trainSttus = RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
+                    var trainStatus: String
+                    if (trainSttus == 0) {
+                        trainStatus = "진입"
+                    } else if (trainSttus == 1) {
+                        trainStatus = "도착"
+                    } else {
+                        trainStatus = "출발"
+                    }
+                    liveStn.add(Subway(subwayNm, statnNm, direction, LastSubway, trainStatus))
                 }
-                liveStn.add(Subway(subwayNm,statnNm, direction, LastSubway,trainStatus))
             }
+            Log.i("확인",liveStn.toString())
             withContext(Dispatchers.Main){
 
             }
-        }*/
+        }
     }
 
     private fun initmap(markIcon: BitmapDescriptor){  //coordinates:ArrayList<LatLng>
