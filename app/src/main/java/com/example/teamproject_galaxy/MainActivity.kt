@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         val scanText3= Scanner(resources.openRawResource(R.raw.line3))
         readTextFile(44,scanText3,coordinates3,stn3)
         val scanText4= Scanner(resources.openRawResource(R.raw.line4))
-        readTextFile(50,scanText4,coordinates4,stn4)
+        readTextFile(51,scanText4,coordinates4,stn4)
         val scanText5= Scanner(resources.openRawResource(R.raw.line5))
         readTextFile(56,scanText5,coordinates5,stn5)
         val scanText6= Scanner(resources.openRawResource(R.raw.line6))
@@ -191,8 +191,120 @@ class MainActivity : AppCompatActivity() {
                     sub_option.title("실시간 위치")
                     googleMap.addMarker(sub_option)?.showInfoWindow()
                 }
-                val option3 = PolylineOptions().color(Color.DKGRAY).addAll(coordinates)
-                googleMap.addPolyline(option3)
+                when(subwayName) {
+                    // 1호선
+                    "1호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.BLUE)
+                        for (i in 0..24) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                        polylineOptions.add(coordinates[23])
+                        for(i in 25..38) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                        polylineOptions.add(coordinates[37])
+                        for(i in 39..57) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                        val polylineOptions2 = PolylineOptions().color(Color.BLUE)
+                        polylineOptions2.add(coordinates[20])
+                        for(i in 58..98) {
+                            polylineOptions2.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions2)
+                    }
+                    // 2호선
+                    "2호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.GREEN)
+                        for (i in 0..4) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                        val polylineOptions2 = PolylineOptions().color(Color.GREEN)
+                        for(i in 27..31) {
+                            polylineOptions2.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions2)
+                        val polygonOptions = PolygonOptions().strokeColor(Color.GREEN)
+                        for(i in 4..27) {
+                            polygonOptions.add(coordinates[i])
+                        }
+                        for(i in 32..50) {
+                            polygonOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolygon(polygonOptions)
+                    }
+                    // 3호선
+                    "3호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.rgb(255,165,0))
+                        for(cor in coordinates) {
+                            polylineOptions.add(cor)
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                    }
+                    // 4호선
+                    "4호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.CYAN)
+                        for(cor in coordinates) {
+                            polylineOptions.add(cor)
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                    }
+                    // 5호선
+                    "5호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.rgb(138, 43, 226))
+                        for(i in 0..48) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                        val polylineOptions2 = PolylineOptions().color(Color.rgb(138, 43, 226))
+                        polylineOptions2.add(coordinates[38])
+                        for(i in 49..55) {
+                            polylineOptions2.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions2)
+                    }
+                    // 6호선
+                    "6호선" -> {
+                        val polygonOptions = PolygonOptions().strokeColor(Color.rgb(205, 124, 47))
+                        for(i in 0..5) {
+                            polygonOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolygon(polygonOptions)
+                        val polylineOptions = PolylineOptions().color(Color.rgb(205, 124, 47))
+                        for(i in 5..38) {
+                            polylineOptions.add(coordinates[i])
+                        }
+                        googleMap.addPolyline(polylineOptions)
+                    }
+                    // 7호선
+                    "7호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.YELLOW)
+                        for(cor in coordinates) {
+                            polylineOptions.add(cor)
+                        }
+                        val polyline = googleMap.addPolyline(polylineOptions)
+                    }
+                    // 8호선
+                    "8호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.rgb(255,0, 127))
+                        for(cor in coordinates) {
+                            polylineOptions.add(cor)
+                        }
+                        val polyline = googleMap.addPolyline(polylineOptions)
+                    }
+                    // 9호선
+                    "9호선" -> {
+                        val polylineOptions = PolylineOptions().color(Color.RED)
+                        for(cor in coordinates) {
+                            polylineOptions.add(cor)
+                        }
+                        val polyline = googleMap.addPolyline(polylineOptions)
+                    }
+                }
             }else
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(loc,16.0f))
         }
@@ -208,6 +320,7 @@ class MainActivity : AppCompatActivity() {
             val double2: Double = info[1].toDouble()
             val locate = LatLng(double1, double2)
             locArray.add(locate)
+            Log.i("확인",info[2])
             stn_location.put(info[2],locate)
             stnArray.add(info[2])
             if(counting==counts)dones=false
