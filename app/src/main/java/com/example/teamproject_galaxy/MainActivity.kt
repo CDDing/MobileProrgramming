@@ -304,7 +304,10 @@ class MainActivity : AppCompatActivity() {
 
             googleMap.setOnMarkerClickListener(object:GoogleMap.OnMarkerClickListener{
                 override fun onMarkerClick(p0: Marker): Boolean {
-                    Toast.makeText(this@MainActivity,p0.title.toString(),Toast.LENGTH_SHORT).show()
+                    if(p0.title=="실시간 위치") {//지하철일경우 이벤트 처리
+                        Toast.makeText(this@MainActivity, p0.title.toString(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     return false
                 }
             })
