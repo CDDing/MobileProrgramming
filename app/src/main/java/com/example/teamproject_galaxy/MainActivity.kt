@@ -92,8 +92,20 @@ class MainActivity : AppCompatActivity() {
         initSpinner()
         //init()
     }
+    fun share(){
 
+    }
     private fun initLayout() {
+        binding.share.setOnClickListener {
+            share()//공유기능
+        }
+        binding.like.setOnClickListener {
+            
+        }
+        binding.cardView.visibility=View.GONE
+        binding.cardView.bringToFront()
+        binding.cardView.setOnClickListener {
+        }
         binding.button.setOnClickListener {
             val intent= Intent(this, SettingActivity::class.java)
             startActivity(intent)
@@ -358,11 +370,17 @@ class MainActivity : AppCompatActivity() {
 
             googleMap.setOnMarkerClickListener(object:GoogleMap.OnMarkerClickListener{
                 override fun onMarkerClick(p0: Marker): Boolean {
-                    if(p0.title=="실시간 위치") {//지하철일경우 이벤트 처리
-                        Toast.makeText(this@MainActivity, p0.title.toString(), Toast.LENGTH_SHORT)
-                            .show()
+                    if(p0.title!="실시간 위치") {//지하철일경우 이벤트 처리
+                        binding.titleSubway.text=p0.title+"("+subwayName+")"
+                        binding.cardView.visibility=View.VISIBLE
                     }
+
                     return false
+                }
+            })
+            googleMap.setOnMapClickListener(object:GoogleMap.OnMapClickListener{
+                override fun onMapClick(p0: LatLng) {
+                    binding.cardView.visibility=View.GONE
                 }
             })
         }
