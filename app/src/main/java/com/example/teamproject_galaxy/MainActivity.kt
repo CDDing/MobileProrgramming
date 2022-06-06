@@ -1,5 +1,6 @@
 package com.example.teamproject_galaxy
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.*
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import org.jsoup.Jsoup
+import java.io.PrintStream
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -67,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     var stn8=ArrayList<String>()
     var coordinates9=ArrayList<LatLng>()
     var stn9=ArrayList<String>()
+    var like_stnMap= mutableMapOf<String,Int>()
     val colour= listOf<Float>(BitmapDescriptorFactory.HUE_BLUE
         ,BitmapDescriptorFactory.HUE_GREEN
         ,BitmapDescriptorFactory.HUE_ORANGE
@@ -88,19 +91,55 @@ class MainActivity : AppCompatActivity() {
         getLiveStn()
         initLayout()
         saveArray()
+        getLikeList()
         initmap(BitmapDescriptorFactory.HUE_GREEN)
         initSpinner()
         //init()
     }
+
+    private fun getLikeList() {
+        try {
+            var stnlike:String
+            for(i in stn_location.keys) {
+                val scan = Scanner(openFileInput(i+".txt"))
+                while (scan.hasNextLine()) {
+                    stnlike=scan.nextLine()
+                    like_stnMap[i]=stnlike.toInt()
+                }
+            }
+        }catch (e:Exception){//없을경우 파일 생성
+            stn_location
+            for(i in stn_location.keys) {
+                val output = PrintStream(openFileOutput(i+".txt", Context.MODE_PRIVATE))
+                output.println(0)
+                output.close()
+            }
+        }
+    }
+
     fun share(){
 
+    }
+    fun write_likeSubway(subway:String,like:Int){
+        val output = PrintStream(openFileOutput(subway+".txt", Context.MODE_PRIVATE))
+        output.println(like)
+        output.close()
     }
     private fun initLayout() {
         binding.share.setOnClickListener {
             share()//공유기능
         }
         binding.like.setOnClickListener {
-            
+            val subname=binding.titleSubway.text.toString()
+            if(like_stnMap[subname]==0){
+                like_stnMap[subname]=1
+                write_likeSubway(subname,1)
+                binding.like.setColorFilter(Color.parseColor("#FFFF00"))
+            }else{
+                like_stnMap[subname]=0
+                write_likeSubway(subname,0)
+                binding.like.setColorFilter(Color.parseColor("#000000"))
+            }
         }
         binding.cardView.visibility=View.GONE
         binding.cardView.bringToFront()
@@ -371,8 +410,13 @@ class MainActivity : AppCompatActivity() {
             googleMap.setOnMarkerClickListener(object:GoogleMap.OnMarkerClickListener{
                 override fun onMarkerClick(p0: Marker): Boolean {
                     if(p0.title!="실시간 위치") {//지하철일경우 이벤트 처리
-                        binding.titleSubway.text=p0.title+"("+subwayName+")"
+                        binding.titleSubway.text=p0.title
                         binding.cardView.visibility=View.VISIBLE
+                        if(like_stnMap[p0.title]==1){
+                            binding.like.setColorFilter(Color.parseColor("#FFFF00"))
+                        }else{
+                            binding.like.setColorFilter(Color.parseColor("#000000"))
+                        }
                     }
 
                     return false
@@ -398,6 +442,7 @@ class MainActivity : AppCompatActivity() {
             locArray.add(locate)
             Log.i("확인",info[2])
             stn_location.put(info[2],locate)
+            like_stnMap.put(info[2],0)
             stnArray.add(info[2])
             if(counting==counts)dones=false
             else counting++
