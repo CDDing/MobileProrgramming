@@ -67,7 +67,16 @@ class MainActivity : AppCompatActivity() {
     var stn8=ArrayList<String>()
     var coordinates9=ArrayList<LatLng>()
     var stn9=ArrayList<String>()
-
+    val colour= listOf<Float>(BitmapDescriptorFactory.HUE_BLUE
+        ,BitmapDescriptorFactory.HUE_GREEN
+        ,BitmapDescriptorFactory.HUE_ORANGE
+        ,BitmapDescriptorFactory.HUE_CYAN
+        ,BitmapDescriptorFactory.HUE_VIOLET
+        ,BitmapDescriptorFactory.HUE_YELLOW
+        ,BitmapDescriptorFactory.HUE_MAGENTA
+        ,BitmapDescriptorFactory.HUE_ROSE
+        ,BitmapDescriptorFactory.HUE_RED
+    )
     val permissions = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -88,6 +97,50 @@ class MainActivity : AppCompatActivity() {
         binding.button.setOnClickListener {
             val intent= Intent(this, SettingActivity::class.java)
             startActivity(intent)
+        }
+        binding.imageView.setOnClickListener{
+            setMarker=true
+            googleMap.clear()
+            val num=subwayName.slice(0..0).toInt()-1
+            Log.i("확인",num.toString())
+            when(num){
+                0->{
+                    subwayName="1호선"
+                    initmap(colour[num])
+                }
+                1->{
+                    subwayName="2호선"
+                    initmap(colour[num])
+                }
+                2->{
+                    subwayName="3호선"
+                    initmap(colour[num])
+                }
+                3->{
+                    subwayName="4호선"
+                    initmap(colour[num])
+                }
+                4->{
+                    subwayName="5호선"
+                    initmap(colour[num])
+                }
+                5->{
+                    subwayName="6호선"
+                    initmap(colour[num])
+                }
+                6->{
+                    subwayName="7호선"
+                    initmap(colour[num])
+                }
+                7->{
+                    subwayName="8호선"
+                    initmap(colour[num])
+                }
+                8->{
+                    subwayName="9호선"
+                    initmap(colour[num])
+                }
+            }
         }
     }
 
@@ -164,6 +217,7 @@ class MainActivity : AppCompatActivity() {
             googleMap.setMaxZoomPreference(18.0f)
             //Marker:
             if (setMarker) {
+                Log.i("확인",coordinates.toString())
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates[0], 16.0f))
                 for (cor in coordinates) {
                     val option = MarkerOptions()
@@ -358,55 +412,55 @@ class MainActivity : AppCompatActivity() {
                             subwayName="1호선"
                             coordinates=coordinates1
                             stn=stn1
-                            initmap(BitmapDescriptorFactory.HUE_BLUE)
+                            initmap(colour[position])
                         }
                         1->{
                             subwayName="2호선"
                             coordinates=coordinates2
                             stn=stn2
-                            initmap(BitmapDescriptorFactory.HUE_GREEN)
+                            initmap(colour[position])
                         }
                         2->{
                             subwayName="3호선"
                             coordinates=coordinates3
                             stn=stn3
-                            initmap(BitmapDescriptorFactory.HUE_ORANGE)
+                            initmap(colour[position])
                         }
                         3->{
                             subwayName="4호선"
                             coordinates=coordinates4
                             stn=stn4
-                            initmap(BitmapDescriptorFactory.HUE_CYAN)
+                            initmap(colour[position])
                         }
                         4->{
                             subwayName="5호선"
                             coordinates=coordinates5
                             stn=stn5
-                            initmap(BitmapDescriptorFactory.HUE_VIOLET)
+                            initmap(colour[position])
                         }
                         5->{
                             subwayName="6호선"
                             coordinates=coordinates6
                             stn=stn6
-                            initmap(BitmapDescriptorFactory.HUE_YELLOW)
+                            initmap(colour[position])
                         }
                         6->{
                             subwayName="7호선"
                             coordinates=coordinates7
                             stn=stn7
-                            initmap(BitmapDescriptorFactory.HUE_MAGENTA)
+                            initmap(colour[position])
                         }
                         7->{
                             subwayName="8호선"
                             coordinates=coordinates8
                             stn=stn8
-                            initmap(BitmapDescriptorFactory.HUE_ROSE)
+                            initmap(colour[position])
                         }
                         8->{
                             subwayName="9호선"
                             coordinates=coordinates9
                             stn=stn9
-                            initmap(BitmapDescriptorFactory.HUE_RED)
+                            initmap(colour[position])
                         }
                     }
                 }
