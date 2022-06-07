@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getLiveStn()
-        initLayout()
+       initLayout()
         saveArray()
         getLikeList()
         initmap(BitmapDescriptorFactory.HUE_GREEN)
@@ -269,6 +269,7 @@ class MainActivity : AppCompatActivity() {
             //Marker:
             if (setMarker) {
                 Log.i("확인",coordinates.toString())
+
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates[0], 16.0f))
                 for (cor in coordinates) {
                     val option = MarkerOptions()
@@ -360,7 +361,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         googleMap.addPolyline(polylineOptions)
                         val polylineOptions2 = PolylineOptions().color(Color.rgb(138, 43, 226))
-                        polylineOptions2.add(coordinates[38])
+                        polylineOptions2.add(coordinates[38]) //38
                         for (i in 49..55) {
                             polylineOptions2.add(coordinates[i])
                         }
@@ -374,7 +375,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         googleMap.addPolygon(polygonOptions)
                         val polylineOptions = PolylineOptions().color(Color.rgb(205, 124, 47))
-                        for (i in 5..38) {
+                        for (i in 5..38) {  //5~38
                             polylineOptions.add(coordinates[i])
                         }
                         googleMap.addPolyline(polylineOptions)
@@ -386,6 +387,7 @@ class MainActivity : AppCompatActivity() {
                             polylineOptions.add(cor)
                         }
                         val polyline = googleMap.addPolyline(polylineOptions)
+                       // googleMap.addPolyline(polylineOptions)
                     }
                     // 8호선
                     "8호선" -> {
