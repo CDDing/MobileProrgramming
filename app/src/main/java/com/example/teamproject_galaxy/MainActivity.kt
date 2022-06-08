@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var locationRequest: LocationRequest
     lateinit var locationRequest2:LocationRequest
     lateinit var locationCallback: LocationCallback
+    lateinit var adapterFav: FavAdapter
 
     var MAPS_API_KEY="AIzaSyD_HxDVhJrotISF17sQoEPpL-sN0TOXNqY"
     var stn=ArrayList<String>()
@@ -127,6 +128,7 @@ class MainActivity : AppCompatActivity() {
     var line7 = ArrayList<StationInfo> ()
     var line8 = ArrayList<StationInfo> ()
     var line9 = ArrayList<StationInfo> ()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
@@ -139,6 +141,26 @@ class MainActivity : AppCompatActivity() {
         initmap(BitmapDescriptorFactory.HUE_GREEN)
         initSpinner()
         //init()
+    }
+
+    private fun favouriteStn(){
+
+        var stnList=favStnMap.keys.toList()
+        binding.favRecycler.layoutManager=
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+        binding.favRecycler.addItemDecoration(
+            DividerItemDecoration(this,
+                LinearLayoutManager.VERTICAL)
+        )
+        adapterFav= FavAdapter(stnList)
+        adapterFav.itemClickListener=object:FavAdapter.OnItemClickListener{
+            override fun OnItemClick(stnList:String,position:Int){
+                var locations:LatLng?= favStnMap[adapterFav.stnList[position]]
+                Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
+                //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
+            }
+        }
+        binding.favRecycler.adapter=adapterFav
     }
 
     private fun getLikeList() {
@@ -213,7 +235,6 @@ class MainActivity : AppCompatActivity() {
             if(like_stnMap[subname]==0){
                 like_stnMap[subname]=1
                 write_likeSubway(subname,1)
-
                 favStnMap.put(subname,LatLng(98.72,88.32))
                 binding.like.setColorFilter(Color.parseColor("#FFFF00"))
             }else{
@@ -227,9 +248,23 @@ class MainActivity : AppCompatActivity() {
         binding.cardView.bringToFront()
         binding.cardView.setOnClickListener {
         }
+
+        binding.favCard.visibility=View.GONE
+        binding.favCard.bringToFront()
         binding.settingBtn.setOnClickListener {
-            val intent= Intent(this, SettingActivity::class.java)
-            startActivity(intent)
+//            val intent= Intent(this, SettingActivity::class.java)
+//            startActivity(intent)
+            if(binding.favCard.visibility==View.GONE) {
+                binding.favCard.visibility = View.VISIBLE
+                binding.settingBtn.text = "X"
+                binding.spinner.visibility=View.GONE
+            }
+            else {
+                binding.favCard.visibility=View.GONE
+                binding.settingBtn.text = "설정"
+                binding.spinner.visibility=View.VISIBLE
+            }
+            favouriteStn()
         }
         binding.imageView.setOnClickListener{
             setMarker=true
