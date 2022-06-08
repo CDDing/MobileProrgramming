@@ -26,6 +26,7 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.io.PrintStream
 import java.util.*
+import java.util.jar.Attributes
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -69,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     var stn8=ArrayList<String>()
     var coordinates9=ArrayList<LatLng>()
     var stn9=ArrayList<String>()
+    var sub_list=ArrayList<Marker>()
     var like_stnMap= mutableMapOf<String,Int>()
     val colour= listOf<Float>(BitmapDescriptorFactory.HUE_BLUE
         ,BitmapDescriptorFactory.HUE_GREEN
@@ -252,12 +254,11 @@ class MainActivity : AppCompatActivity() {
         runBlocking {
             Job.join()
         }
-        //.i("확인-지하철 개수",liveStn.size.toString())
-        Log.i("확인", liveStn.toString())
     }
 
     private fun initmap(colour:Float){  //coordinates:ArrayList<LatLng>
         getLiveStn()
+        sub_list.clear()
         val imageBitmap:Bitmap= BitmapFactory.decodeResource(resources,resources.getIdentifier("subway","drawable",packageName))
         val BitmapIcon=Bitmap.createScaledBitmap(imageBitmap,100,100,false)
         val mapFragment=supportFragmentManager
@@ -268,7 +269,6 @@ class MainActivity : AppCompatActivity() {
             googleMap.setMaxZoomPreference(18.0f)
             //Marker:
             if (setMarker) {
-                Log.i("확인",coordinates.toString())
 
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates[0], 16.0f))
                 for (cor in coordinates) {
@@ -281,6 +281,7 @@ class MainActivity : AppCompatActivity() {
                     option.title(stn[stnName])
                     //option2.snippet("서울역")
                     googleMap.addMarker(option)?.showInfoWindow()
+
                 }
                 for (subway in liveStn) {
                     val sub_option = MarkerOptions()
@@ -288,8 +289,11 @@ class MainActivity : AppCompatActivity() {
                     sub_option.position(position)
                     sub_option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     sub_option.title("실시간 위치")
+                    sub_option.snippet(subway.location)
                     sub_option.icon(BitmapDescriptorFactory.fromBitmap(BitmapIcon))
-                    googleMap.addMarker(sub_option)?.showInfoWindow()
+                    val marker=googleMap.addMarker(sub_option) as Marker
+                    marker?.showInfoWindow()
+                    sub_list.add(marker)
                 }
                 when (subwayName) {
                     // 1호선
@@ -419,6 +423,11 @@ class MainActivity : AppCompatActivity() {
                         }else{
                             binding.like.setColorFilter(Color.parseColor("#000000"))
                         }
+                        val NearestMarker=getNearestMarker(p0)
+                        binding.NearestSubName.text=NearestMarker.snippet
+                        binding.NearestSubName.setOnClickListener {
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(NearestMarker.position,16.0f))
+                        }
                     }
 
                     return false
@@ -432,6 +441,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getNearestMarker(p0: Marker): Marker {
+        val x=p0.position.latitude
+        val y=p0.position.longitude
+        var distance:Double=999999.0
+        var cal:Double
+        var nearestMarker:Marker=p0
+        for(i in sub_list){
+            cal=(i.position.latitude-x)*(i.position.latitude-x)+(i.position.longitude-y)*(i.position.longitude-y)
+            if(cal<distance&&i.snippet!=p0.title){
+                nearestMarker=i
+                distance=cal
+            }
+        }
+        return nearestMarker
+
+    }
+
     private fun readTextFile(counts:Int,scans:Scanner,locArray:ArrayList<LatLng>,stnArray:ArrayList<String>){
         var dones:Boolean=true
         var counting=1
@@ -442,7 +468,6 @@ class MainActivity : AppCompatActivity() {
             val double2: Double = info[1].toDouble()
             val locate = LatLng(double1, double2)
             locArray.add(locate)
-            Log.i("확인",info[2])
             stn_location.put(info[2],locate)
             like_stnMap.put(info[2],0)
             stnArray.add(info[2])

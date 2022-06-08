@@ -41,9 +41,9 @@
         <LinearLayout
             android:id="@+id/card_view"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:elevation="1dp"
+            android:layout_height="160dp"
             android:layout_alignParentBottom="true"
+            android:elevation="1dp"
             app:layout_constraintBottom_toBottomOf="@+id/map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -63,13 +63,13 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/title_subway"
                         android:layout_width="375dp"
                         android:layout_height="45dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="8dp"
                         android:gravity="center|left"
                         android:text="상세 정보"
-                        android:id="@+id/title_subway"
                         android:textColor="#000000"
                         android:textSize="9pt"
                         android:textStyle="bold" />
@@ -108,117 +108,32 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="25dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="7dp"
-                            android:text="지하철 정보"
-                            android:textColor="#000000"
-                            android:textSize="14dp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:orientation="horizontal">
-
-                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="7dp"
-                            android:text="신 주소:       "
-                            android:textColor="#000000"
-                            android:textSize="14dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/park_add_lot"
-                            android:layout_width="290dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="7dp"
-                            android:text="갱신 전"
+                            android:text="가장 가까운 지하철 위치(터치 시 이동)"
                             android:textColor="#000000"
                             android:textSize="14dp" />
+
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="25dp"
+                        android:layout_height="45dp"
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/NearestSubName"
                             android:layout_width="wrap_content"
-                            android:layout_height="20dp"
+                            android:layout_height="30dp"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="7dp"
-                            android:text="구 주소:       "
+                            android:text="역 이름"
                             android:textColor="#000000"
-                            android:textSize="14dp"
+                            android:textSize="18dp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/park_add_road"
-                            android:layout_width="290dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="7dp"
-                            android:text="갱신 전"
-                            android:textColor="#000000"
-                            android:textSize="14dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="7dp"
-                            android:text="전화번호: "
-                            android:textColor="#000000"
-                            android:textSize="14dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/phone_num"
-                            android:layout_width="290dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="7dp"
-                            android:text="갱신 전"
-                            android:textColor="#000000"
-                            android:textSize="14dp" />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="70dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="7dp"
-                            android:layout_marginBottom="25dp"
-                            android:text="편의시설: "
-                            android:textColor="#000000"
-                            android:textSize="14dp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/equip"
-                            android:layout_width="290dp"
-                            android:layout_height="20dp"
-                            android:layout_marginTop="7dp"
-                            android:text="갱신 전"
-                            android:textColor="#000000"
-                            android:textSize="14dp" />
                     </LinearLayout>
 
 
