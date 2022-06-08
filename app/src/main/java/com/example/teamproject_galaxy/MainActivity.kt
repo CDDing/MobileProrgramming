@@ -17,6 +17,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teamproject_galaxy.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -94,6 +96,8 @@ class MainActivity : AppCompatActivity() {
         ,BitmapDescriptorFactory.HUE_ROSE
         ,BitmapDescriptorFactory.HUE_RED
     )
+    val favStnMap=mutableMapOf<String,LatLng>()
+
     val permissions = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
         android.Manifest.permission.ACCESS_COARSE_LOCATION
@@ -128,7 +132,6 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         KakaoSdk.init(this, "41877b5ffc73c20ad11c0df0b842caa8")
-        getHashKey()
         getLiveStn()
        initLayout()
         saveArray()
@@ -137,28 +140,7 @@ class MainActivity : AppCompatActivity() {
         initSpinner()
         //init()
     }
-    private fun getHashKey() {
-        var packageInfo: PackageInfo? = null
-        try {
-            packageInfo =
-                packageManager.getPackageInfo(
-                    packageName,
-                    PackageManager.GET_SIGNATURES
-                )
-        } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
-        }
-        if (packageInfo == null) Log.i("KeyHash", "KeyHash:null")
-        for (signature in packageInfo!!.signatures) {
-            try {
-                val md: MessageDigest = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                Log.i("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-            } catch (e: NoSuchAlgorithmException) {
-                Log.i("KeyHash", "Unable to get MessageDigest. signature=$signature", e)
-            }
-        }
-    }
+
     private fun getLikeList() {
         try {
             var stnlike:String
@@ -231,10 +213,13 @@ class MainActivity : AppCompatActivity() {
             if(like_stnMap[subname]==0){
                 like_stnMap[subname]=1
                 write_likeSubway(subname,1)
+
+                favStnMap.put(subname,LatLng(98.72,88.32))
                 binding.like.setColorFilter(Color.parseColor("#FFFF00"))
             }else{
                 like_stnMap[subname]=0
                 write_likeSubway(subname,0)
+                favStnMap.remove(subname,LatLng(98.72,88.32))
                 binding.like.setColorFilter(Color.parseColor("#000000"))
             }
         }
@@ -1054,7 +1039,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return nearestMarker
-
     }
 
     private fun readTextFile(counts:Int,scans:Scanner,locArray:ArrayList<LatLng>,stnArray:ArrayList<String>){
