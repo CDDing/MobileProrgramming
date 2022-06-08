@@ -235,12 +235,12 @@ class MainActivity : AppCompatActivity() {
             if(like_stnMap[subname]==0){
                 like_stnMap[subname]=1
                 write_likeSubway(subname,1)
-                favStnMap.put(subname,LatLng(98.72,88.32))
+                favStnMap.put(subname,stn_location.getValue(subname))
                 binding.like.setColorFilter(Color.parseColor("#FFFF00"))
             }else{
                 like_stnMap[subname]=0
                 write_likeSubway(subname,0)
-                favStnMap.remove(subname,LatLng(98.72,88.32))
+                favStnMap.remove(subname,stn_location.getValue(subname))
                 binding.like.setColorFilter(Color.parseColor("#000000"))
             }
         }
