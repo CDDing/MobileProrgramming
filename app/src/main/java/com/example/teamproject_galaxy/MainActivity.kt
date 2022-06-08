@@ -419,6 +419,7 @@ class MainActivity : AppCompatActivity() {
                     var trainSttus =
                         RealTimeArray.getJSONObject(i).getString("trainSttus").toInt()
                     var trainStatus: String
+                    var statnTnm = RealTimeArray.getJSONObject(i).getString("statnTnm").toString()
                     if (trainSttus == 0) {
                         trainStatus = "진입"
                     } else if (trainSttus == 1) {
@@ -426,7 +427,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         trainStatus = "출발"
                     }
-                    subarray.add(Subway(subwayNm, statnNm, direction, LastSubway, trainStatus))
+                    subarray.add(Subway(subwayNm, statnNm, direction, LastSubway,statnTnm, trainStatus))
                 }
             }
             withContext(Dispatchers.Default) {

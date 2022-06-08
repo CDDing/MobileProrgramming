@@ -4,4 +4,5 @@ data class Subway(var subwayNm:String,
                   var location:String,
                   var direction:Int,
                   var LastSubway:Boolean,
+                  var statnTnm:String,
                   var trainStatus:String)
