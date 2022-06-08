@@ -154,15 +154,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun share(textToShare:String){
+    fun share(thisStn:String,times:String,nextStn:String){
         val TAG="KakaoShare"
+        val text="지금 ["+thisStn+"역]에 있습니다.["+times+"]뒤에 ["+nextStn+"역]에 도착할 겁니다."
         val defaultFeed = TextTemplate(
-            text = textToShare.trimIndent(),
+            text = text.trimIndent(),
             link = Link(webUrl = "https://developers.kakao.com", mobileWebUrl = "https://developers.kakao.com")
         )
 
         if (LinkClient.instance.isKakaoLinkAvailable(this)) {
-            // Kakao Talk sharing is available.
             LinkClient.instance.defaultTemplate(this, defaultFeed) { linkResult, error ->
                 if (error != null) {
                     Log.e(TAG, "Kakao Talk sharing failed.", error)
@@ -171,26 +171,19 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "Succeeded in Kakao Talk sharing. ${linkResult.intent}")
                     startActivity(linkResult.intent)
 
-                    // If you get this message even though Kakao Talk sharing message is successfully sent, some content may not be displayed normally.
                     Log.w(TAG, "Warning Msg: ${linkResult.warningMsg}")
                     Log.w(TAG, "Argument Msg: ${linkResult.argumentMsg}")
                 }
             }
         } else {
-            // If Kakao Talk is not installed, it is recommended to share URI via web.
-            // Example of sharing URI via web
             val sharerUrl = WebSharerClient.instance.defaultTemplateUri(defaultFeed)
 
-            // Open URI through CustomTabs.
-
-            // 1. Open URI on Chrome browser through CustomTabs.
             try {
                 KakaoCustomTabsClient.openWithDefault(this, sharerUrl)
             } catch(e: UnsupportedOperationException) {
                 // Exception handling if Chrome browser is not used.
             }
 
-            // 2. Open URI on device's default browser through CustomTabs.
             try {
                 KakaoCustomTabsClient.open(this, sharerUrl)
             } catch (e: ActivityNotFoundException) {
@@ -206,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     private fun initLayout() {
         binding.share.setOnClickListener {
             val subwhere=binding.titleSubway.text.toString()
-            share(subwhere)//공유기능
+            share(subwhere,"times","next Station")//공유기능
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()
@@ -224,7 +217,7 @@ class MainActivity : AppCompatActivity() {
         binding.cardView.bringToFront()
         binding.cardView.setOnClickListener {
         }
-        binding.button.setOnClickListener {
+        binding.settingBtn.setOnClickListener {
             val intent= Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
