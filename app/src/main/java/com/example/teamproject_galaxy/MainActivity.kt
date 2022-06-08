@@ -1,13 +1,17 @@
 package com.example.teamproject_galaxy
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -21,10 +25,18 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.link.LinkClient
+import com.kakao.sdk.link.WebSharerClient
+import com.kakao.sdk.template.model.Link
+import com.kakao.sdk.template.model.TextTemplate
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.io.PrintStream
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.jar.Attributes
 import kotlin.collections.ArrayList
@@ -90,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        KakaoSdk.init(this, "41877b5ffc73c20ad11c0df0b842caa8")
+        getHashKey()
         getLiveStn()
        initLayout()
         saveArray()
@@ -98,7 +112,28 @@ class MainActivity : AppCompatActivity() {
         initSpinner()
         //init()
     }
-
+    private fun getHashKey() {
+        var packageInfo: PackageInfo? = null
+        try {
+            packageInfo =
+                packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_SIGNATURES
+                )
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        if (packageInfo == null) Log.i("KeyHash", "KeyHash:null")
+        for (signature in packageInfo!!.signatures) {
+            try {
+                val md: MessageDigest = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.i("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            } catch (e: NoSuchAlgorithmException) {
+                Log.i("KeyHash", "Unable to get MessageDigest. signature=$signature", e)
+            }
+        }
+    }
     private fun getLikeList() {
         try {
             var stnlike:String
@@ -119,8 +154,49 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun share(){
+    fun share(textToShare:String){
+        val TAG="KakaoShare"
+        val defaultFeed = TextTemplate(
+            text = textToShare.trimIndent(),
+            link = Link(webUrl = "https://developers.kakao.com", mobileWebUrl = "https://developers.kakao.com")
+        )
 
+        if (LinkClient.instance.isKakaoLinkAvailable(this)) {
+            // Kakao Talk sharing is available.
+            LinkClient.instance.defaultTemplate(this, defaultFeed) { linkResult, error ->
+                if (error != null) {
+                    Log.e(TAG, "Kakao Talk sharing failed.", error)
+                }
+                else if (linkResult != null) {
+                    Log.d(TAG, "Succeeded in Kakao Talk sharing. ${linkResult.intent}")
+                    startActivity(linkResult.intent)
+
+                    // If you get this message even though Kakao Talk sharing message is successfully sent, some content may not be displayed normally.
+                    Log.w(TAG, "Warning Msg: ${linkResult.warningMsg}")
+                    Log.w(TAG, "Argument Msg: ${linkResult.argumentMsg}")
+                }
+            }
+        } else {
+            // If Kakao Talk is not installed, it is recommended to share URI via web.
+            // Example of sharing URI via web
+            val sharerUrl = WebSharerClient.instance.defaultTemplateUri(defaultFeed)
+
+            // Open URI through CustomTabs.
+
+            // 1. Open URI on Chrome browser through CustomTabs.
+            try {
+                KakaoCustomTabsClient.openWithDefault(this, sharerUrl)
+            } catch(e: UnsupportedOperationException) {
+                // Exception handling if Chrome browser is not used.
+            }
+
+            // 2. Open URI on device's default browser through CustomTabs.
+            try {
+                KakaoCustomTabsClient.open(this, sharerUrl)
+            } catch (e: ActivityNotFoundException) {
+                // Exception handling if Internet browser is not used.
+            }
+        }
     }
     fun write_likeSubway(subway:String,like:Int){
         val output = PrintStream(openFileOutput(subway+".txt", Context.MODE_PRIVATE))
@@ -129,7 +205,8 @@ class MainActivity : AppCompatActivity() {
     }
     private fun initLayout() {
         binding.share.setOnClickListener {
-            share()//공유기능
+            val subwhere=binding.titleSubway.text.toString()
+            share(subwhere)//공유기능
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()

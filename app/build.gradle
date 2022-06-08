@@ -48,7 +48,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'androidx.leanback:leanback:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    //Kakaotalk
+    implementation "com.kakao.sdk:v2-user:2.10.0" // Kakao Login
+    implementation "com.kakao.sdk:v2-talk:2.10.0" // Kakao Talk Social, Kakao Talk messaging
+    implementation "com.kakao.sdk:v2-friend:2.10.0" // Friend picker
+    implementation "com.kakao.sdk:v2-story:2.10.0" // Kakao Story
+    implementation "com.kakao.sdk:v2-link:2.10.0" // Kakao Talk sharing
+    implementation "com.kakao.sdk:v2-navi:2.10.0" // Kakao Navi
 }
