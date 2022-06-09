@@ -496,17 +496,154 @@ class MainActivity : AppCompatActivity() {
                 for (subway in liveStn) {
                     val sub_option = MarkerOptions()
                     if(subway.trainStatus.equals("도착")) {
-                        position = stn_location.getValue(subway.location)
+                        if(subway.location.equals("성수지선") || subway.location.equals("성수종착")) {
+                            position = stn_location.getValue("성수")
+                        } else if(subway.location.equals("신도림지선")) {
+                            position = stn_location.getValue("신도림")
+                        } else if(subway.location.equals("응암순환(상선)") || subway.location.equals("응암(하선-종착)")) {
+                            position = stn_location.getValue("응암")
+                        } else {
+                            position = stn_location.getValue(subway.location)
+                        }
                     } else if(subway.trainStatus.equals("진입")) {
-                        // 진입
+                        // 진입 - 하행
                         if(subway.direction == 1) {
                             when(subway.subwayNm) {
-
                                 "1호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    when(subway.location) {
+                                        "구로"->{
+                                            val temp = stn_location.getValue("구로")
+                                            val temp2 = stn_location.getValue("신도림")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "금천구청"->{
+                                            val temp = stn_location.getValue("독산")
+                                            val temp2 = stn_location.getValue("금천구청")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "광명"->{
+                                            val temp = stn_location.getValue("광명")
+                                            val temp2 = stn_location.getValue("금천구청")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "병점"->{
+                                            val temp = stn_location.getValue("병점")
+                                            val temp2 = stn_location.getValue("세류")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "서동탄"->{
+                                            val temp = stn_location.getValue("서동탄")
+                                            val temp2 = stn_location.getValue("병점")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else->{
+                                            // 인천 ~ 구로 전
+                                            for(i in 0..line1_1.size-2) {
+                                                if(line1_1[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_1[i].pos.latitude + line1_1[i+1].pos.latitude)/2
+                                                    val m2 = (line1_1[i].pos.longitude + line1_1[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 소요산 ~ 구로 전
+                                            for(i in 1..line1_2.size-1) {
+                                                if(line1_2[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_2[i].pos.latitude + line1_2[i-1].pos.latitude)/2
+                                                    val m2 = (line1_2[i].pos.longitude + line1_2[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 구로 ~ 금천구청
+                                            for(i in 1..line1_3.size-2) {
+                                                if(line1_3[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_3[i].pos.latitude + line1_3[i-1].pos.latitude)/2
+                                                    val m2 = (line1_3[i].pos.longitude + line1_3[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 금천구청 ~ 병점
+                                            for(i in 1..line1_5.size-2) {
+                                                if(line1_5[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_5[i].pos.latitude + line1_5[i-1].pos.latitude)/2
+                                                    val m2 = (line1_5[i].pos.longitude + line1_5[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 병점 ~ 신창
+                                            for(i in 1..line1_7.size-1) {
+                                                if(line1_7[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_7[i].pos.latitude + line1_7[i-1].pos.latitude)/2
+                                                    val m2 = (line1_7[i].pos.longitude + line1_7[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 "2호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 외선 순환
+                                    if(subway.statnTnm.equals("까치산")) {
+                                        for(i in 1..line2_2.size-1) {
+                                            if(line2_2[i].name.equals(subway.location)) {
+                                                val m1 = (line2_2[i].pos.latitude + line2_2[i-1].pos.latitude)/2
+                                                val m2 = (line2_2[i].pos.longitude + line2_2[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("신도림지선")) {
+                                            val temp = stn_location.getValue("신도림")
+                                            val temp2 = stn_location.getValue("도림천")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        if(line2_2[0].name.equals(subway.location)) {
+                                            position = stn_location.getValue(subway.location)
+                                        }
+                                    } else if(subway.statnTnm.equals("성수지선")) {
+                                        for(i in 1..line2_3.size-1) {
+                                            if(line2_3[i].name.equals(subway.location)) {
+                                                val m1 = (line2_3[i].pos.latitude + line2_3[i-1].pos.latitude)/2
+                                                val m2 = (line2_3[i].pos.longitude + line2_3[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("성수지선")) {
+                                            val temp = stn_location.getValue("성수")
+                                            val temp2 = stn_location.getValue("용답")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                    } else {
+                                        for (i in 0..line2_1.size - 1) {
+                                            if (line2_1[i].name.equals(subway.location)) {
+                                                if (i == line2_1.size - 1) {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[0].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[0].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                } else {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[i + 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[i + 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 "3호선" -> {
                                     for(i in 1..line3.size-2) {
@@ -560,7 +697,60 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 "6호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 응암 순환
+                                    val p1 = stn_location.getValue("응암")
+                                    val p2 = stn_location.getValue("역촌")
+                                    val p3 = stn_location.getValue("불광")
+                                    val p4 = stn_location.getValue("독바위")
+                                    val p5 = stn_location.getValue("연신내")
+                                    val p6 = stn_location.getValue("구산")
+                                    val p7 = stn_location.getValue("새절(신사)")
+                                    when(subway.location) {
+                                        "응암"->{
+                                            val m1 = (p1.latitude + p7.latitude)/2
+                                            val m2 = (p1.longitude + p7.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "역촌"->{
+                                            val m1 = (p2.latitude + p1.latitude)/2
+                                            val m2 = (p2.longitude + p1.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "불광"->{
+                                            val m1 = (p3.latitude + p2.latitude)/2
+                                            val m2 = (p3.longitude + p2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "독바위"->{
+                                            val m1 = (p4.latitude + p3.latitude)/2
+                                            val m2 = (p4.longitude + p3.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "연신내"->{
+                                            val m1 = (p5.latitude + p4.latitude)/2
+                                            val m2 = (p5.longitude + p4.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "구산"->{
+                                            val m1 = (p6.latitude + p5.latitude)/2
+                                            val m2 = (p6.longitude + p5.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else-> {
+                                            for (i in 5..line6.size - 2) {
+                                                if (line6[i].name.equals(subway.location)) {
+                                                    val m1 =
+                                                        (line6[i].pos.latitude + line6[i - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line6[i].pos.longitude + line6[i - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line6[line6.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "7호선" -> {
                                     for(i in 1..line7.size-2) {
@@ -600,12 +790,122 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
+                            // 진입 - 상행
                             when(subway.subwayNm) {
                                 "1호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    when(subway.location) {
+                                        // 어느 방향에서 진입하는지 확인 불가
+                                        "구로"->{
+                                            position = stn_location.getValue("구로")
+                                        }
+                                        "금천구청"->{
+                                            position = stn_location.getValue("금천구청")
+                                        }
+                                        "광명"->{
+                                            position = stn_location.getValue("광명")
+                                        }
+                                        "병점"->{
+                                            position = stn_location.getValue("병점")
+                                        }
+                                        "서동탄"->{
+                                            position = stn_location.getValue("서동탄")
+                                        }
+                                        else->{
+                                            // 인천 ~ 구로 전
+                                            for(i in 0..line1_1.size-2) {
+                                                if(line1_1[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_1[i].pos.latitude + line1_1[i-1].pos.latitude)/2
+                                                    val m2 = (line1_1[i].pos.longitude + line1_1[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_1[0].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                            // 소요산 ~ 구로 전
+                                            for(i in 1..line1_2.size-1) {
+                                                if(line1_2[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_2[i].pos.latitude + line1_2[i-1].pos.latitude)/2
+                                                    val m2 = (line1_2[i].pos.longitude + line1_2[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 구로 ~ 금천구청
+                                            for(i in 1..line1_3.size-2) {
+                                                if(line1_3[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_3[i].pos.latitude + line1_3[i+1].pos.latitude)/2
+                                                    val m2 = (line1_3[i].pos.longitude + line1_3[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 금천구청 ~ 병점
+                                            for(i in 1..line1_3.size-2) {
+                                                if(line1_5[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_5[i].pos.latitude + line1_5[i+1].pos.latitude)/2
+                                                    val m2 = (line1_5[i].pos.longitude + line1_5[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 병점 ~ 신창
+                                            for(i in 1..line1_7.size-1) {
+                                                if(line1_7[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_7[i].pos.latitude + line1_7[i+1].pos.latitude)/2
+                                                    val m2 = (line1_7[i].pos.longitude + line1_7[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_7[line1_7.size-1].equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "2호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 내선 순환
+                                    if(subway.statnTnm.equals("신도림지선")) {
+                                        for(i in 1..line2_2.size-1) {
+                                            if(line2_2[i].name.equals(subway.location)) {
+                                                val m1 = (line2_2[i].pos.latitude + line2_2[i+1].pos.latitude)/2
+                                                val m2 = (line2_2[i].pos.longitude + line2_2[i+1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("신도림지선")) {
+                                            position = stn_location.getValue("신도림")
+                                        }
+                                        if(line2_2[0].name.equals(subway.location)) {
+                                            position = stn_location.getValue(subway.location)
+                                        }
+                                    } else if(subway.statnTnm.equals("신설동")) {
+                                        for(i in 1..line2_3.size-1) {
+                                            if(line2_3[i].name.equals(subway.location)) {
+                                                val m1 = (line2_3[i].pos.latitude + line2_3[i-1].pos.latitude)/2
+                                                val m2 = (line2_3[i].pos.longitude + line2_3[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("성수지선")) {
+                                            position = stn_location.getValue("성수")
+                                        }
+                                    } else {
+                                        for (i in 0..line2_1.size - 1) {
+                                            if (line2_1[i].name.equals(subway.location)) {
+                                                if (i == 0) {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[line2_1.size - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[line2_1.size - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                } else {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[i - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[i - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 "3호선" -> {
                                     for(i in 1..line3.size-2) {
@@ -659,7 +959,60 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 "6호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 응암 순환
+                                    val p1 = stn_location.getValue("응암")
+                                    val p2 = stn_location.getValue("역촌")
+                                    val p3 = stn_location.getValue("불광")
+                                    val p4 = stn_location.getValue("독바위")
+                                    val p5 = stn_location.getValue("연신내")
+                                    val p6 = stn_location.getValue("구산")
+                                    val p7 = stn_location.getValue("새절(신사)")
+                                    when(subway.location) {
+                                        "응암"->{
+                                            val m1 = (p1.latitude + p7.latitude)/2
+                                            val m2 = (p1.longitude + p7.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "역촌"->{
+                                            val m1 = (p2.latitude + p1.latitude)/2
+                                            val m2 = (p2.longitude + p1.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "불광"->{
+                                            val m1 = (p3.latitude + p2.latitude)/2
+                                            val m2 = (p3.longitude + p2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "독바위"->{
+                                            val m1 = (p4.latitude + p3.latitude)/2
+                                            val m2 = (p4.longitude + p3.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "연신내"->{
+                                            val m1 = (p5.latitude + p4.latitude)/2
+                                            val m2 = (p5.longitude + p4.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "구산"->{
+                                            val m1 = (p6.latitude + p5.latitude)/2
+                                            val m2 = (p6.longitude + p5.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else-> {
+                                            for (i in 5..line6.size - 2) {
+                                                if (line6[i].name.equals(subway.location)) {
+                                                    val m1 =
+                                                        (line6[i].pos.latitude + line6[i + 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line6[i].pos.longitude + line6[i + 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line6[line6.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "7호선" -> {
                                     for(i in 1..line7.size-2) {
@@ -700,14 +1053,151 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        // 출발
+                        // 출발 - 상행
                         if(subway.direction == 0) {
                             when(subway.subwayNm) {
                                 "1호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    when(subway.location) {
+                                        // 각 분기점들
+                                        "구로"->{
+                                            val temp = stn_location.getValue("구로")
+                                            val temp2 = stn_location.getValue("신도림")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "금천구청"->{
+                                            val temp = stn_location.getValue("금천구청")
+                                            val temp2 = stn_location.getValue("독산")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "광명"->{
+                                            val temp = stn_location.getValue("광명")
+                                            val temp2 = stn_location.getValue("금천구청")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "병점"->{
+                                            val temp = stn_location.getValue("병점")
+                                            val temp2 = stn_location.getValue("세류")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "서동탄"->{
+                                            val temp = stn_location.getValue("서동탄")
+                                            val temp2 = stn_location.getValue("병점")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else->{
+                                            // 인천 ~ 구로 전
+                                            for(i in 0..line1_1.size-2) {
+                                                if(line1_1[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_1[i].pos.latitude + line1_1[i+1].pos.latitude)/2
+                                                    val m2 = (line1_1[i].pos.longitude + line1_1[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 구로 이후 소요산
+                                            for(i in 1..line1_2.size-2) {
+                                                if(line1_2[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_2[i].pos.latitude + line1_2[i+1].pos.latitude)/2
+                                                    val m2 = (line1_2[i].pos.longitude + line1_2[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_2[line1_2.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                            // 구로 이후 금천구청 전
+                                            for(i in 1..line1_3.size-2) {
+                                                if(line1_3[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_3[i].pos.latitude + line1_3[i-1].pos.latitude)/2
+                                                    val m2 = (line1_3[i].pos.longitude + line1_3[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 금천구청 전 병점 이후
+                                            for(i in 1..line1_5.size-2) {
+                                                if(line1_5[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_5[i].pos.latitude + line1_5[i-1].pos.latitude)/2
+                                                    val m2 = (line1_5[i].pos.longitude + line1_5[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 병점 전 신창
+                                            for(i in 1..line1_2.size-2) {
+                                                if(line1_7[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_7[i].pos.latitude + line1_7[i-1].pos.latitude)/2
+                                                    val m2 = (line1_7[i].pos.longitude + line1_7[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_7[line1_7.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "2호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 외선 순환
+                                    if(subway.statnTnm.equals("까치산")) {
+                                        for(i in 1..line2_2.size-1) {
+                                            if(line2_2[i].name.equals(subway.location)) {
+                                                val m1 = (line2_2[i].pos.latitude + line2_2[i-1].pos.latitude)/2
+                                                val m2 = (line2_2[i].pos.longitude + line2_2[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("신도림지선")) {
+                                            val temp = stn_location.getValue("신도림")
+                                            val temp2 = stn_location.getValue("도림천")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        if(line2_2[0].name.equals(subway.location)) {
+                                            position = stn_location.getValue(subway.location)
+                                        }
+                                    } else if(subway.statnTnm.equals("성수지선")) {
+                                        for(i in 1..line2_3.size-1) {
+                                            if(line2_3[i].name.equals(subway.location)) {
+                                                val m1 = (line2_3[i].pos.latitude + line2_3[i-1].pos.latitude)/2
+                                                val m2 = (line2_3[i].pos.longitude + line2_3[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("성수지선")) {
+                                            val temp = stn_location.getValue("성수")
+                                            val temp2 = stn_location.getValue("용답")
+                                            val m1 = (temp.latitude + temp2.latitude)/2
+                                            val m2 = (temp.longitude + temp2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                    } else {
+                                        for (i in 0..line2_1.size - 1) {
+                                            if (line2_1[i].name.equals(subway.location)) {
+                                                if (i == line2_1.size - 1) {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[0].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[0].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                } else {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[i + 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[i + 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 "3호선" -> {
                                     for(i in 1..line3.size-2) {
@@ -761,7 +1251,59 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 "6호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 응암 순환
+                                    val p1 = stn_location.getValue("응암")
+                                    val p2 = stn_location.getValue("역촌")
+                                    val p3 = stn_location.getValue("불광")
+                                    val p4 = stn_location.getValue("독바위")
+                                    val p5 = stn_location.getValue("연신내")
+                                    val p6 = stn_location.getValue("구산")
+                                    when(subway.location) {
+                                        "응암"->{
+                                            val m1 = (p1.latitude + p2.latitude)/2
+                                            val m2 = (p1.longitude + p2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "역촌"->{
+                                            val m1 = (p2.latitude + p3.latitude)/2
+                                            val m2 = (p2.longitude + p3.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "불광"->{
+                                            val m1 = (p3.latitude + p4.latitude)/2
+                                            val m2 = (p3.longitude + p4.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "독바위"->{
+                                            val m1 = (p4.latitude + p5.latitude)/2
+                                            val m2 = (p4.longitude + p5.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "연신내"->{
+                                            val m1 = (p5.latitude + p6.latitude)/2
+                                            val m2 = (p5.longitude + p6.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "구산"->{
+                                            val m1 = (p6.latitude + p1.latitude)/2
+                                            val m2 = (p6.longitude + p1.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else-> {
+                                            for (i in 5..line6.size - 2) {
+                                                if (line6[i].name.equals(subway.location)) {
+                                                    val m1 =
+                                                        (line6[i].pos.latitude + line6[i - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line6[i].pos.longitude + line6[i - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line6[line6.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "7호선" -> {
                                     for(i in 1..line7.size-2) {
@@ -801,12 +1343,159 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
+                            // 출발 - 하행
                             when(subway.subwayNm) {
                                 "1호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    when(subway.location) {
+                                        // 각 분기점들
+                                        "구로"->{
+                                            if(subway.statnTnm.equals("천안") || subway.statnTnm.equals("신창")
+                                                || subway.statnTnm.equals("서동탄") || subway.statnTnm.equals("광명") || subway.statnTnm.equals("병점")) {
+                                                val temp = stn_location.getValue("구로")
+                                                val temp2 = stn_location.getValue("가산디지털단지")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            } else {
+                                                val temp = stn_location.getValue("구로")
+                                                val temp2 = stn_location.getValue("구일")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        "금천구청"->{
+                                            if(subway.statnTnm.equals("광명")) {
+                                                val temp = stn_location.getValue("금천구청")
+                                                val temp2 = stn_location.getValue("광명")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            } else {
+                                                val temp = stn_location.getValue("금천구청")
+                                                val temp2 = stn_location.getValue("석수")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        "광명"->{
+                                            position = stn_location.getValue("광명")
+                                        }
+                                        "병점"->{
+                                            if(subway.statnTnm.equals("서동탄")) {
+                                                val temp = stn_location.getValue("병점")
+                                                val temp2 = stn_location.getValue("서동탄")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            } else {
+                                                val temp = stn_location.getValue("병점")
+                                                val temp2 = stn_location.getValue("세마")
+                                                val m1 = (temp.latitude + temp2.latitude)/2
+                                                val m2 = (temp.longitude + temp2.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        "서동탄"->{
+                                            position = stn_location.getValue("서동탄")
+                                        }
+                                        else->{
+                                            // 인천 ~ 구로 전
+                                            for(i in 1..line1_1.size-2) {
+                                                if(line1_1[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_1[i].pos.latitude + line1_1[i-1].pos.latitude)/2
+                                                    val m2 = (line1_1[i].pos.longitude + line1_1[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_1[0].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                            // 구로 이후 소요산
+                                            for(i in 1..line1_2.size-1) {
+                                                if(line1_2[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_2[i].pos.latitude + line1_2[i-1].pos.latitude)/2
+                                                    val m2 = (line1_2[i].pos.longitude + line1_2[i-1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 구로 이후 금천구청 전
+                                            for(i in 1..line1_3.size-2) {
+                                                if(line1_3[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_3[i].pos.latitude + line1_3[i+1].pos.latitude)/2
+                                                    val m2 = (line1_3[i].pos.longitude + line1_3[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 금천구청 전 병점 이후
+                                            for(i in 1..line1_5.size-2) {
+                                                if(line1_5[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_5[i].pos.latitude + line1_5[i+1].pos.latitude)/2
+                                                    val m2 = (line1_5[i].pos.longitude + line1_5[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            // 병점 전 신창
+                                            for(i in 1..line1_2.size-2) {
+                                                if(line1_7[i].name.equals(subway.location)) {
+                                                    val m1 = (line1_7[i].pos.latitude + line1_7[i+1].pos.latitude)/2
+                                                    val m2 = (line1_7[i].pos.longitude + line1_7[i+1].pos.longitude)/2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line1_7[line1_7.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "2호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 내선 순환
+                                    if(subway.statnTnm.equals("신도림지선")) {
+                                        for(i in 1..line2_2.size-1) {
+                                            if(line2_2[i].name.equals(subway.location)) {
+                                                val m1 = (line2_2[i].pos.latitude + line2_2[i+1].pos.latitude)/2
+                                                val m2 = (line2_2[i].pos.longitude + line2_2[i+1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("신도림지선")) {
+                                            position = stn_location.getValue("신도림")
+                                        }
+                                        if(line2_2[0].name.equals(subway.location)) {
+                                            position = stn_location.getValue(subway.location)
+                                        }
+                                    } else if(subway.statnTnm.equals("신설동")) {
+                                        for(i in 1..line2_3.size-1) {
+                                            if(line2_3[i].name.equals(subway.location)) {
+                                                val m1 = (line2_3[i].pos.latitude + line2_3[i-1].pos.latitude)/2
+                                                val m2 = (line2_3[i].pos.longitude + line2_3[i-1].pos.longitude)/2
+                                                position = LatLng(m1, m2)
+                                            }
+                                        }
+                                        if(subway.location.equals("성수지선")) {
+                                            position = stn_location.getValue("성수")
+                                        }
+                                    } else {
+                                        for (i in 0..line2_1.size - 1) {
+                                            if (line2_1[i].name.equals(subway.location)) {
+                                                if (i == 0) {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[line2_1.size - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[line2_1.size - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                } else {
+                                                    val m1 =
+                                                        (line2_1[i].pos.latitude + line2_1[i - 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line2_1[i].pos.longitude + line2_1[i - 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 "3호선" -> {
                                     for(i in 1..line3.size-2) {
@@ -860,7 +1549,59 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 "6호선" -> {
-                                    position = stn_location.getValue(subway.location)
+                                    // 응암 순환
+                                    val p1 = stn_location.getValue("응암")
+                                    val p2 = stn_location.getValue("역촌")
+                                    val p3 = stn_location.getValue("불광")
+                                    val p4 = stn_location.getValue("독바위")
+                                    val p5 = stn_location.getValue("연신내")
+                                    val p6 = stn_location.getValue("구산")
+                                    when(subway.location) {
+                                        "응암"->{
+                                            val m1 = (p1.latitude + p2.latitude)/2
+                                            val m2 = (p1.longitude + p2.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "역촌"->{
+                                            val m1 = (p2.latitude + p3.latitude)/2
+                                            val m2 = (p2.longitude + p3.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "불광"->{
+                                            val m1 = (p3.latitude + p4.latitude)/2
+                                            val m2 = (p3.longitude + p4.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "독바위"->{
+                                            val m1 = (p4.latitude + p5.latitude)/2
+                                            val m2 = (p4.longitude + p5.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "연신내"->{
+                                            val m1 = (p5.latitude + p6.latitude)/2
+                                            val m2 = (p5.longitude + p6.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        "구산"->{
+                                            val m1 = (p6.latitude + p1.latitude)/2
+                                            val m2 = (p6.longitude + p1.longitude)/2
+                                            position = LatLng(m1, m2)
+                                        }
+                                        else-> {
+                                            for (i in 5..line6.size - 2) {
+                                                if (line6[i].name.equals(subway.location)) {
+                                                    val m1 =
+                                                        (line6[i].pos.latitude + line6[i + 1].pos.latitude) / 2
+                                                    val m2 =
+                                                        (line6[i].pos.longitude + line6[i + 1].pos.longitude) / 2
+                                                    position = LatLng(m1, m2)
+                                                }
+                                            }
+                                            if(line6[line6.size-1].name.equals(subway.location)) {
+                                                position = stn_location.getValue(subway.location)
+                                            }
+                                        }
+                                    }
                                 }
                                 "7호선" -> {
                                     for(i in 1..line7.size-2) {
