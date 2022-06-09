@@ -171,6 +171,8 @@
                     android:gravity="center"
                     android:padding="15dp"
                     android:text="즐겨찾는 길"
+                    android:textColor="#000000"
+                    android:background="#d4ffa6"
                     android:textSize="30sp" />
 
                 <androidx.recyclerview.widget.RecyclerView

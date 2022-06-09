@@ -6,10 +6,12 @@
     <TextView
         android:id="@+id/favView"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
+        android:layout_height="30dp"
         android:layout_margin="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="stnName"
-        android:textSize="20sp" />
+        android:textColor="#000000"
+        android:background="#f5dd90"
+        android:textSize="18sp" />
 </LinearLayout>
