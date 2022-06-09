@@ -47,6 +47,7 @@
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginBottom="176dp"
+        android:layout_marginTop="80dp"
         android:backgroundTint="#3F55CC"
         android:fontFamily="sans-serif-condensed-medium"
         android:text="GO!"
