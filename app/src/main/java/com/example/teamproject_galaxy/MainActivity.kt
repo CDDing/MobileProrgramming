@@ -2,21 +2,16 @@ package com.example.teamproject_galaxy
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.teamproject_galaxy.databinding.ActivityMainBinding
@@ -37,12 +32,7 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.io.PrintStream
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
-import java.util.jar.Attributes
-import kotlin.collections.ArrayList
-import kotlin.text.Typography.times
 
 class MainActivity : AppCompatActivity() {
     lateinit var googleMap: GoogleMap
@@ -156,34 +146,16 @@ class MainActivity : AppCompatActivity() {
         adapterFav= FavAdapter(stnList)
         adapterFav.itemClickListener=object:FavAdapter.OnItemClickListener{
             override fun OnItemClick(stnList:String,position:Int){
-                var name=adapterFav.stnList[position]
-                var locations:LatLng= favStnMap.getValue(name)      //**
-                Toast.makeText(applicationContext, name + " " +locations.toString(), Toast.LENGTH_SHORT).show()
+                var locations:LatLng= favStnMap.getValue(adapterFav.stnList[position])      //**
+                Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
                 //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
                 binding.favCard.visibility=View.GONE
                 binding.favBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
-                var whichLine=getLine(name)-1
-                binding.spinner.setSelection(whichLine)
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locations,16.0f))
             }
         }
         binding.favRecycler.adapter=adapterFav
-    }
-
-    private fun getLine(name:String): Int { //gitu if nk ada return something
-        var line:Int
-        if(stn1.contains(name)) line=1
-        else if (stn2.contains(name)) line=2
-        else if (stn3.contains(name)) line=3
-        else if (stn4.contains(name)) line=4
-        else if (stn5.contains(name)) line=5
-        else if (stn6.contains(name)) line=6
-        else if (stn7.contains(name)) line=7
-        else if (stn8.contains(name)) line=8
-        else if (stn9.contains(name)) line=9
-        else line=1
-        return line
     }
 
     private fun getLikeList() {
@@ -208,11 +180,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-// fun share(thisStn:String,nextStn:String){
-    fun share(thisStn:String){
+
+    fun share(thisStn:String,times:String,nextStn:String){
         val TAG="KakaoShare"
-        val text="지금 ["+thisStn+"역]에 있습니다."
-        //val text="지금 ["+thisStn+"역]에 있습니다.다음에 ["+nextStn+"역]에 도착할 겁니다."
+        val text="지금 ["+thisStn+"역]에 있습니다.["+times+"]뒤에 ["+nextStn+"역]에 도착할 겁니다."
         val defaultFeed = TextTemplate(
             text = text.trimIndent(),
             link = Link(webUrl = "https://developers.kakao.com", mobileWebUrl = "https://developers.kakao.com")
@@ -255,8 +226,7 @@ class MainActivity : AppCompatActivity() {
     private fun initLayout() {
         binding.share.setOnClickListener {
             val subwhere=binding.titleSubway.text.toString()
-            //share(subwhere,"times","next Station")//공유기능
-            share(subwhere)
+            share(subwhere,"times","next Station")//공유기능
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()
