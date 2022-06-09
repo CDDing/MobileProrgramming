@@ -155,9 +155,13 @@ class MainActivity : AppCompatActivity() {
         adapterFav= FavAdapter(stnList)
         adapterFav.itemClickListener=object:FavAdapter.OnItemClickListener{
             override fun OnItemClick(stnList:String,position:Int){
-                var locations:LatLng?= favStnMap[adapterFav.stnList[position]]
+                var locations:LatLng= favStnMap.getValue(adapterFav.stnList[position])      //**
                 Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
                 //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
+                binding.favCard.visibility=View.GONE
+                binding.settingBtn.text = "설정"
+                binding.spinner.visibility=View.VISIBLE
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locations,16.0f))
             }
         }
         binding.favRecycler.adapter=adapterFav
@@ -252,8 +256,6 @@ class MainActivity : AppCompatActivity() {
         binding.favCard.visibility=View.GONE
         binding.favCard.bringToFront()
         binding.settingBtn.setOnClickListener {
-//            val intent= Intent(this, SettingActivity::class.java)
-//            startActivity(intent)
             if(binding.favCard.visibility==View.GONE) {
                 binding.favCard.visibility = View.VISIBLE
                 binding.settingBtn.text = "X"
