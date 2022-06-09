@@ -42,6 +42,7 @@ import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.jar.Attributes
 import kotlin.collections.ArrayList
+import kotlin.text.Typography.times
 
 class MainActivity : AppCompatActivity() {
     lateinit var googleMap: GoogleMap
@@ -160,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, name + " " +locations.toString(), Toast.LENGTH_SHORT).show()
                 //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
                 binding.favCard.visibility=View.GONE
-                binding.settingBtn.text = "★"
+                binding.favBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
                 var whichLine=getLine(name)-1
                 binding.spinner.setSelection(whichLine)
@@ -207,10 +208,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun share(thisStn:String,times:String,nextStn:String){
+// fun share(thisStn:String,nextStn:String){
+    fun share(thisStn:String){
         val TAG="KakaoShare"
-        val text="지금 ["+thisStn+"역]에 있습니다.["+times+"]뒤에 ["+nextStn+"역]에 도착할 겁니다."
+        val text="지금 ["+thisStn+"역]에 있습니다."
+        //val text="지금 ["+thisStn+"역]에 있습니다.다음에 ["+nextStn+"역]에 도착할 겁니다."
         val defaultFeed = TextTemplate(
             text = text.trimIndent(),
             link = Link(webUrl = "https://developers.kakao.com", mobileWebUrl = "https://developers.kakao.com")
@@ -253,7 +255,8 @@ class MainActivity : AppCompatActivity() {
     private fun initLayout() {
         binding.share.setOnClickListener {
             val subwhere=binding.titleSubway.text.toString()
-            share(subwhere,"times","next Station")//공유기능
+            //share(subwhere,"times","next Station")//공유기능
+            share(subwhere)
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()
@@ -276,15 +279,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.favCard.visibility=View.GONE
         binding.favCard.bringToFront()
-        binding.settingBtn.setOnClickListener {
+        binding.favBtn.setOnClickListener {
             if(binding.favCard.visibility==View.GONE) {
                 binding.favCard.visibility = View.VISIBLE
-                binding.settingBtn.text = "X"
+                binding.favBtn.text = "X"
                 binding.spinner.visibility=View.GONE
             }
             else {
                 binding.favCard.visibility=View.GONE
-                binding.settingBtn.text = "★"
+                binding.favBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
             }
             favouriteStn()

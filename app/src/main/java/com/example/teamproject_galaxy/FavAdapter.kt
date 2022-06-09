@@ -29,7 +29,7 @@ class FavAdapter (val stnList: List<String>) : RecyclerView.Adapter<FavAdapter.V
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.favView.text = stnList[position]
+        holder.binding.favView.text = stnList[position]+"역"
     }
 
     override fun getItemCount(): Int {
