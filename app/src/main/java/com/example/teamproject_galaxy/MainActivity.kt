@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        getHashKey()
         KakaoSdk.init(this, "41877b5ffc73c20ad11c0df0b842caa8")
         getLiveStn()
        initLayout()
@@ -142,6 +143,29 @@ class MainActivity : AppCompatActivity() {
         initmap(BitmapDescriptorFactory.HUE_GREEN)
         initSpinner()
         //init()
+    }
+
+    private fun getHashKey() {
+        var packageInfo: PackageInfo? = null
+        try {
+            packageInfo =
+                packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.GET_SIGNATURES
+                )
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+        if (packageInfo == null) Log.i("KeyHash", "KeyHash:null")
+        for (signature in packageInfo!!.signatures) {
+            try {
+                val md: MessageDigest = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.i("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            } catch (e: NoSuchAlgorithmException) {
+                Log.i("KeyHash", "Unable to get MessageDigest. signature=$signature", e)
+            }
+        }
     }
 
     private fun favouriteStn(){
