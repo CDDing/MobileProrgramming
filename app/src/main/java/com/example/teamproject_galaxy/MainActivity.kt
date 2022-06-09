@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
                 //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
                 binding.favCard.visibility=View.GONE
-                binding.settingBtn.text = "설정"
+                binding.settingBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locations,16.0f))
             }
@@ -175,6 +175,9 @@ class MainActivity : AppCompatActivity() {
                 while (scan.hasNextLine()) {
                     stnlike=scan.nextLine()
                     like_stnMap[i]=stnlike.toInt()
+                    if(stnlike=="1"){
+                        favStnMap.put(i,stn_location.getValue(i))
+                    }
                 }
             }
         }catch (e:Exception){//없을경우 파일 생성
@@ -263,7 +266,7 @@ class MainActivity : AppCompatActivity() {
             }
             else {
                 binding.favCard.visibility=View.GONE
-                binding.settingBtn.text = "설정"
+                binding.settingBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
             }
             favouriteStn()
