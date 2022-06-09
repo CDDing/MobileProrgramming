@@ -155,16 +155,34 @@ class MainActivity : AppCompatActivity() {
         adapterFav= FavAdapter(stnList)
         adapterFav.itemClickListener=object:FavAdapter.OnItemClickListener{
             override fun OnItemClick(stnList:String,position:Int){
-                var locations:LatLng= favStnMap.getValue(adapterFav.stnList[position])      //**
-                Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
+                var name=adapterFav.stnList[position]
+                var locations:LatLng= favStnMap.getValue(name)      //**
+                Toast.makeText(applicationContext, name + " " +locations.toString(), Toast.LENGTH_SHORT).show()
                 //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
                 binding.favCard.visibility=View.GONE
                 binding.settingBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
+                var whichLine=getLine(name)-1
+                binding.spinner.setSelection(whichLine)
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(locations,16.0f))
             }
         }
         binding.favRecycler.adapter=adapterFav
+    }
+
+    private fun getLine(name:String): Int { //gitu if nk ada return something
+        var line:Int
+        if(stn1.contains(name)) line=1
+        else if (stn2.contains(name)) line=2
+        else if (stn3.contains(name)) line=3
+        else if (stn4.contains(name)) line=4
+        else if (stn5.contains(name)) line=5
+        else if (stn6.contains(name)) line=6
+        else if (stn7.contains(name)) line=7
+        else if (stn8.contains(name)) line=8
+        else if (stn9.contains(name)) line=9
+        else line=1
+        return line
     }
 
     private fun getLikeList() {
