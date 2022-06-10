@@ -1,7 +1,9 @@
 package com.example.teamproject_galaxy
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -200,7 +202,7 @@ class MainActivity : AppCompatActivity() {
     }
 
    // fun share(thisStn:String,times:String,nextStn:String){
-   fun share(thisStn:String){
+   fun kakaoShare(thisStn:String){
         val TAG="KakaoShare"
         val text="지금 ["+thisStn+"역]에 있습니다."
         //val text="지금 ["+thisStn+"역]에 있습니다.["+times+"]뒤에 ["+nextStn+"역]에 도착할 겁니다."
@@ -238,15 +240,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    fun msgShare(stn: String) {
+        val content="지금 ["+stn+"역]에 있습니다."
+        val intent = Intent(Intent.ACTION_SEND) // 공유하는 인텐트 생성
+            .apply {
+                type = "text/plain" // 데이터 타입 설정
+                putExtra(Intent.EXTRA_TEXT, content) // 보낼 내용 설정
+            }
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(Intent.createChooser(intent, "위치 메세지 보내기"))
+        } else {
+            Toast.makeText(this, "위치 메세지를 전송할 수 없습니다", Toast.LENGTH_LONG).show()
+        }
+    }
+
     fun write_likeSubway(subway:String,like:Int){
         val output = PrintStream(openFileOutput(subway+".txt", Context.MODE_PRIVATE))
         output.println(like)
         output.close()
     }
     private fun initLayout() {
-        binding.share.setOnClickListener {
+        binding.msgShare.setOnClickListener {
             val subwhere=binding.titleSubway.text.toString()
-            share(subwhere)//공유기능
+            msgShare(subwhere)
+        }
+        binding.kakaoShare.setOnClickListener {
+            val subwhere=binding.titleSubway.text.toString()
+            kakaoShare(subwhere)//공유기능
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()

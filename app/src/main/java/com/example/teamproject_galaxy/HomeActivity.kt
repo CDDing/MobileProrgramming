@@ -14,6 +14,7 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 
+//
 class HomeActivity : AppCompatActivity() {
     lateinit var binding:HomepageBinding
 
