@@ -76,36 +76,9 @@
                         android:textSize="9pt"
                         android:textStyle="bold" />
 
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="25dp">-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/like"-->
-<!--                            android:layout_width="25dp"-->
-<!--                            android:layout_height="25dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            app:srcCompat="@drawable/like_sub"/>-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/msgShare"-->
-<!--                            android:layout_width="25dp"-->
-<!--                            android:layout_height="25dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            app:srcCompat="@drawable/share_button"/>-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/kakaoShare"-->
-<!--                            android:layout_width="25dp"-->
-<!--                            android:layout_height="25dp"-->
-<!--                            android:layout_weight="1"-->
-<!--                            app:srcCompat="@drawable/share_button"/>-->
-
-<!--                    </LinearLayout>-->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="25dp">
-
 
                         <ImageView
                             android:id="@+id/msgShare"

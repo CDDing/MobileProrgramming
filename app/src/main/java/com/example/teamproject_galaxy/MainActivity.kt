@@ -149,9 +149,8 @@ class MainActivity : AppCompatActivity() {
         adapterFav.itemClickListener=object:FavAdapter.OnItemClickListener{
             override fun OnItemClick(stnList:String,position:Int){
                 var namestn:String=adapterFav.stnList[position]
-                var locations:LatLng= favStnMap.getValue(namestn)      //**
+                var locations:LatLng= favStnMap.getValue(namestn)
                 Toast.makeText(applicationContext, locations.toString(), Toast.LENGTH_SHORT).show()
-                //locations.toString()= lat/lng: (37.475415909738146,126.63262503637782)
                 binding.favCard.visibility=View.GONE
                 binding.favBtn.text = "★"
                 binding.spinner.visibility=View.VISIBLE
@@ -201,11 +200,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-   // fun share(thisStn:String,times:String,nextStn:String){
    fun kakaoShare(thisStn:String){
         val TAG="KakaoShare"
         val text="지금 ["+thisStn+"역]에 있습니다."
-        //val text="지금 ["+thisStn+"역]에 있습니다.["+times+"]뒤에 ["+nextStn+"역]에 도착할 겁니다."
         val defaultFeed = TextTemplate(
             text = text.trimIndent(),
             link = Link(webUrl = "https://developers.kakao.com", mobileWebUrl = "https://developers.kakao.com")
@@ -269,7 +266,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.kakaoShare.setOnClickListener {
             val subwhere=binding.titleSubway.text.toString()
-            kakaoShare(subwhere)//공유기능
+            kakaoShare(subwhere)
         }
         binding.like.setOnClickListener {
             val subname=binding.titleSubway.text.toString()
